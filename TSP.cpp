@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <iterator>
+#include <limits>
 
 typedef struct Solucao{
     std::vector<int> sequencia;
@@ -29,54 +31,42 @@ void calcularValorObj(Solucao &s)
 
 int main(){
 
-    Solucao s2;
-
+    Solucao s;
     std::vector<int> candidatos;
 
-    for(int i = 1; i <= 6; i++)
-    {
+    for(int i = 0; i < (sizeof(matrizAdj)/sizeof(matrizAdj[0])); i++){
         candidatos.push_back(i);
     }
 
-    std::vector<int>::iterator it;
- 
     candidatos.erase(candidatos.begin());
 
-    s2.sequencia.push_back(1);
-    int count;
+    std::vector<int>::iterator it;
+    s.sequencia.push_back(1);
 
     double menor;
+    int count = candidatos.size();
 
-    for (int j = 0; j < 5; j++)
+    for (int j = 0; j < count; j++)
     {
-        menor = 99999;
-        for (count = 0; count < candidatos.size(); count++)
-        {
-            std::cout << matrizAdj[s2.sequencia.back()-1][candidatos[count]-1] << std::endl;
-            if (matrizAdj[s2.sequencia.back()-1][candidatos[count]-1] < menor)
-            {
-                menor = matrizAdj[s2.sequencia.back()-1][candidatos[count]-1];
-                it = candidatos.begin() + count;
-                //teste = candidatos[count];
-                std::cout << "Entrei " << std::endl;
-            }
-        }
-        //std::cout << "sou o teste " << candidatos[teste] << std::endl;
-        s2.sequencia.push_back(*it);
-        candidatos.erase(it);
+        menor = std::numeric_limits<double>::infinity();
         for (int i = 0; i < candidatos.size(); i++)
         {
-            std::cout << candidatos[i] << " oia so essa piranha" << std::endl;
+            //std::cout << matrizAdj[s.sequencia.back()-1][candidatos[i]] << std::endl;
+            if (matrizAdj[s.sequencia.back()-1][candidatos[i]] < menor)
+            {
+                menor = matrizAdj[s.sequencia.back()-1][candidatos[i]];
+                it = candidatos.begin() + i;
+            }
         }
-        
-        exibirSolucao(s2);
+        s.sequencia.push_back(*it+1);
+        candidatos.erase(it);
+        exibirSolucao(s);
     }
-    
-    s2.sequencia.push_back(1);
+    s.sequencia.push_back(1);
 
-    exibirSolucao(s2);
-    calcularValorObj(s2);
-    std::cout << s2.valorObj << "\n";
+    exibirSolucao(s);
+    calcularValorObj(s);
+    std::cout << s.valorObj << "\n";
 
     return 0;
 }
