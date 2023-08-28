@@ -1,53 +1,37 @@
-#detecta se o sistema é de 32 ou 64 bits
-BITS_OPTION = -m64
+CXX := g++
+CXXFLAGS := -std=c++11 -Wall -DIL_STD -m64 -fPIC
 
-#### define o compilador
-CPPC = g++
-#############################
+UNAME_S := $(shell uname -s)
 
-#### opcoes de compilacao e includes
-CCOPT = $(BITS_OPTION) -O3 -fPIC -fexceptions -DNDEBUG -DIL_STD -std=c++0x
-CONCERTINCDIR = $(CONCERTDIR)/include
-CCFLAGS = $(CCOPT)
-#############################
+SOURCE_DIR := src/
+OBJ_DIR := obj/
 
-#### flags do linker
-#############################
+ifeq ($(UNAME_S), Linux)
+SOURCE_DIR := src
+OBJ_DIR := obj
+endif
 
-#### diretorios com os source files e com os objs files
-SRCDIR = src
-OBJDIR = obj
-#############################
+ALL_FILES := $(shell find $(SOURCE_DIR))
+DIRS := $(patsubst $(SOURCE_DIR)/%, $(OBJ_DIR)/%, $(shell find $(SOURCE_DIR)/ -type d))
+SOURCES := $(filter %.cpp, $(ALL_FILES))
+OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SOURCES))
+HEADERS := $(filter %.h, $(ALL_FILES))
 
-#### lista de todos os srcs e todos os objs
-SRCS = $(wildcard $(SRCDIR)/*.cpp)
-OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
-#############################
+EXECUTABLE = tsp
 
-#### regra principal, gera o executavel
-tsp: $(OBJS) 
-	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) -o $@ $(CCLNFLAGS)
-############################
+$(EXECUTABLE): $(OBJECTS) $(HEADERS)
+	$(CXX) $(CXXFLAGS) $(LIB) $(OBJECTS) -o $(EXECUTABLE)
 
-#inclui os arquivos de dependencias
--include $(OBJS:.o=.d)
+$(OBJECTS): $(OBJ_DIR)/%.o : $(SOURCE_DIR)/%.cpp | $(DIRS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-#regra para cada arquivo objeto: compila e gera o arquivo de dependencias do arquivo objeto
-#cada arquivo objeto depende do .c e dos headers (informacao dos header esta no arquivo de dependencias gerado pelo compiler)
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@echo  "\033[31m \nCompiling $<: \033[0m"
-	$(CPPC) $(CCFLAGS) -c $< -o $@
-	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
-	$(CPPC) -std=c++0x  -MM $< > $(basename $@).d
-	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
-	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
-	@rm -f $(basename $@).d.tmp
+$(DIRS):
+	mkdir -p $@
 
-#delete objetos e arquivos de dependencia
+.PHONY: clean rebuild
 clean:
-	@echo "\033[31mcleaning obj directory \033[0m"
-	@rm tsp -f $(OBJDIR)/*.o $(OBJDIR)/*.d
+	$(RM) $(EXECUTABLE) $(OBJECTS)
 
-
-rebuild: clean tsp
+rebuild:
+	make clean
+	make
