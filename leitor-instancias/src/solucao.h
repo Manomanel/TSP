@@ -9,6 +9,6 @@ typedef struct solucao {
 } Solucao;
 
 void exibirSolucao(Solucao &s);
-void calcularValorObj (Solucao *s, double **matrizAdj);
+void calcularValorObj (Solucao &s, double **matrizAdj);
 
 #endif
