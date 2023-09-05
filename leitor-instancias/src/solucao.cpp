@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "solucao.h"
 
 void exibirSolucao(Solucao &s)
