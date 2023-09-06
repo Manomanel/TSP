@@ -20,6 +20,8 @@ int main(int argc, char** argv) {
     Solucao s;
     s = criarSolucao(matrizAdj, dimensao);
     exibirSolucao(s);
+    calcularValorObj(s, matrizAdj);
+    cout << s.valorObj << endl;
 
     return 0;
 }

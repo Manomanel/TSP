@@ -1,13 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <algorithm>
+#include <algorithm>//find e sort
 
 #include "Data.h"
 #include "construcao.h"
 #include "solucao.h"
 
-#define alpha = 0.25
+double valoresAlpha[25] = {
+	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07,
+	0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 0.14,
+	0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21,
+	0.22, 0.23, 0.24, 0.25
+};
 
 typedef struct insercao {
     int verticeSelecionado;
@@ -23,34 +28,26 @@ Solucao criarSolucao (double **matrizAdj, int dimensao)
 {
     Solucao s;
     std::vector<int> candidatos;
-    for (int i = 2; i <= dimensao; i++)
+    for (int i = 2; i <= dimensao; i++)//criar a lista de candidatos completa
     {
         candidatos.push_back(i);
     }
-    prepararSolucao(s, candidatos, matrizAdj, dimensao);
-    exibirSolucao(s);
-    std::vector<insercao> lista;
+    prepararSolucao(s, candidatos, matrizAdj, dimensao);//criar uma solucao parcial com 3 elementos
+
+    std::vector<insercao> lista;//lista de possiveis insercoes
     
-    while (!candidatos.empty())
+    while (!candidatos.empty())//criar e inserir um elemento ate acabar a lista de candidatos
     {
         lista.clear();
         criarInsercoes(s, candidatos, matrizAdj, lista);
-        for (size_t i = 0; i < lista.size(); i++)
-        {
-            cout << "custo insercao: " << lista[i].custoInsecao << "  e vertice removido: " << lista[i].verticeRemovido << endl;
-        }
-        cout << "novo loop" << endl;
     }
-    calcularValorObj(s, matrizAdj);
-    std::cout << s.valorObj << endl;
     return s;
 }
 
 void prepararSolucao (Solucao &s, std::vector<int> &candidatos, double **matrizAdj, int dimensao)
 {
-    s.sequencia.push_back(1);
-
-    for (int i = 0; i < 3; i++)
+    s.sequencia.push_back(1);//inicia e termina com o elemento 1
+    for (int i = 0; i < 3; i++)//escolhe 3 candidatos aleatorios
     {
         int rnd = rand() % candidatos.size();
         s.sequencia.push_back(candidatos[rnd]);
@@ -60,29 +57,28 @@ void prepararSolucao (Solucao &s, std::vector<int> &candidatos, double **matrizA
 }
 
 void criarInsercoes (Solucao &s, std::vector<int> &candidatos, double **matrizAdj, std::vector<insercao> &lista)
-{
-    double distAtual, distNova;    
-    
+{     
     for (int i = 0; i < s.sequencia.size()-1; i++)//cada vertice de S'
     {
         for (size_t j = 0; j < candidatos.size(); j++)//para cada candidato
         {
-        insercao kkk;
-        kkk.verticeSelecionado = candidatos[j];
+        insercao possivelInsercao;
         int elemento = candidatos[j];
-        distAtual = matrizAdj[s.sequencia[i]-1][s.sequencia[i+1]-1];
+        possivelInsercao.verticeSelecionado = elemento;
 
-        distNova = matrizAdj[s.sequencia[i]-1][elemento-1] + matrizAdj[elemento-1][s.sequencia[i+1]-1];
-
-        kkk.custoInsecao = distNova - distAtual;
-        kkk.verticeRemovido = i+1;
-        lista.push_back(kkk);
+        possivelInsercao.custoInsecao = matrizAdj[s.sequencia[i]-1][elemento-1] + matrizAdj[elemento-1][s.sequencia[i+1]-1] - matrizAdj[s.sequencia[i]-1][s.sequencia[i+1]-1];
+        possivelInsercao.verticeRemovido = i+1;
+        lista.push_back(possivelInsercao);
         }
 
     }
     ordenarLista(lista);
-    s.sequencia.emplace(s.sequencia.begin()+lista.begin()->verticeRemovido, lista.begin()->verticeSelecionado);
-    auto iter = std::find(candidatos.begin(), candidatos.end(), lista.begin()->verticeSelecionado);
+
+    double alpha = valoresAlpha[rand() % 25];//escolhe um valor de alpha
+    int selecionado = rand() % ((int) ceil(alpha * lista.size()));//escolhe uma insercao dos candidatos grasp
+
+    s.sequencia.emplace(s.sequencia.begin()+lista[selecionado].verticeRemovido, lista[selecionado].verticeSelecionado);//insere a escolhida
+    auto iter = std::find(candidatos.begin(), candidatos.end(), lista[selecionado].verticeSelecionado);//procura e remove o elemento selecionado da CL
     candidatos.erase(iter);
 }
 
