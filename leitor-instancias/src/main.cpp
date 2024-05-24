@@ -22,10 +22,15 @@ int main(int argc, char** argv) {
     s = criarSolucao(matrizAdj, dimensao);
     exibirSolucao(s);
     calcularValorObj(s, matrizAdj);
-    cout << "Valor antes do swap: " << s.valorObj << endl;
+    cout << "Valor antes do reinsertion: " << s.valorObj << endl;
 
-    bestImprovement(s, matrizAdj);
-    cout << "Valor depois do swap: " << s.valorObj << endl;
+    reinsertion(s, matrizAdj);
+    cout << "Valor depois do reinsertion: " << s.valorObj << endl;
+
+    exibirSolucao(s);
+
+    calcularValorObj(s, matrizAdj);
+    cout << "Deveria dar: " << s.valorObj << endl; 
 
     return 0;
 }

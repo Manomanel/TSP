@@ -3,6 +3,7 @@
 
 #include "solucao.h"
 
-void bestImprovement (Solucao&, double** matrizAdj);
+void swap (Solucao&, double** matrizAdj);
+void reinsertion (Solucao&, double** matrizAdj);
 
 #endif
