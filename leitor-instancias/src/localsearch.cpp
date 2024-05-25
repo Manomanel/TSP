@@ -44,47 +44,55 @@ void swap (Solucao &s, double **matrizAdj)
     }
 }
 
-void reinsertion (Solucao &s, double **matrizAdj)
+void reinsertion (Solucao &s, double **matrizAdj, int choice)
 {
     double bestDelta = 0;
-    int best_i, best_j, no_i;
+    int best_i, best_j;
 
     for (int i = 1; i < s.sequencia.size() - 1; i++){
+        if (choice >= 2 && i == s.sequencia.size() - 2 || choice == 3 && s.sequencia.size() - 3)continue;
         int vi = s.sequencia[i]-1;
         int vi_prev = s.sequencia[i-1]-1;
-        int vi_next = s.sequencia[i+1]-1;
+        int vi_last = s.sequencia[i+choice-1]-1;
+        int vi_next = s.sequencia[i+choice]-1;
 
-        for (int j = 1; j < s.sequencia.size() - 1; j++){
-            if (j == i-1 || j == i)continue;//"edge" cases
+       for (int j = 1; j < s.sequencia.size() - 1; j++){
+            if (j == i-1 || j == i || j == i+1 && choice >= 2 || j == i+2 && choice == 3)continue;
 
             int vj = s.sequencia[j]-1;
             int vj_next = s.sequencia[j+1]-1;
 
             double delta = 0;
-            delta = - matrizAdj[vi_prev][vi] - matrizAdj[vi][vi_next] - matrizAdj[vj][vj_next]
-                    + matrizAdj[vi_prev][vi_next] + matrizAdj[vj][vi] + matrizAdj[vi][vj_next];
+            delta = - matrizAdj[vi_prev][vi] - matrizAdj[vi_last][vi_next] - matrizAdj[vj][vj_next]
+                    + matrizAdj[vi_prev][vi_next] + matrizAdj[vj][vi] + matrizAdj[vi_last][vj_next];
 
             if (delta < bestDelta){
                 bestDelta = delta;
                 best_i = i;
                 best_j = j;
-                no_i = vi+1;
-                
-                cout << "Valores escolhidosaaaaa, I: " << best_i << " eaaaaa J: " << best_j << " puraiaaaaa: " << no_i << endl;
             }
         }
     }
 
-    cout << "Valores escolhidos, I: " << best_i << " e J: " << best_j << endl;
-
     if(bestDelta < 0){
-        if (best_i < best_j){ //para diferenciar quando o nó removido irá afetar a posição de onde será colocado
-            s.sequencia.insert(s.sequencia.begin() + best_j+1, no_i);
-            s.sequencia.erase(s.sequencia.begin() + best_i);
-        } else {
-            s.sequencia.erase(s.sequencia.begin() + best_i);
-            s.sequencia.insert(s.sequencia.begin() + best_j+1, no_i);
+        for (int n = 0; n < choice; n++){
+            if (best_i < best_j){
+                s.sequencia.insert(s.sequencia.begin() + best_j+1, s.sequencia[best_i]);
+                s.sequencia.erase(s.sequencia.begin() + best_i);
+            } else {
+                int teste = s.sequencia[best_i + n];
+                s.sequencia.erase(s.sequencia.begin() + best_i + n);
+                s.sequencia.insert(s.sequencia.begin() + best_j+1 + n, teste);
+            }
         }
         s.valorObj = s.valorObj + bestDelta;
     }
+}
+
+void two_opt (Solucao &s, double **matrizAdj, int choice)
+{
+
+    //std::reverse
+
+
 }

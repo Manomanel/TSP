@@ -20,14 +20,14 @@ int main(int argc, char** argv) {
 
     Solucao s;
     s = criarSolucao(matrizAdj, dimensao);
-    exibirSolucao(s);
+    //exibirSolucao(s);
     calcularValorObj(s, matrizAdj);
     cout << "Valor antes do reinsertion: " << s.valorObj << endl;
 
-    reinsertion(s, matrizAdj);
+    reinsertion(s, matrizAdj, 1);
     cout << "Valor depois do reinsertion: " << s.valorObj << endl;
 
-    exibirSolucao(s);
+    //exibirSolucao(s);
 
     calcularValorObj(s, matrizAdj);
     cout << "Deveria dar: " << s.valorObj << endl; 
