@@ -3,8 +3,9 @@
 
 #include "solucao.h"
 
-void swap (Solucao&, double** matrizAdj);
-void reinsertion (Solucao&, double** matrizAdj, int);
-void two_opt (Solucao&, double** matrizAdj);
+bool swap (Solucao&, double** matrizAdj);
+bool reinsertion (Solucao&, double** matrizAdj, int);
+bool two_opt (Solucao&, double** matrizAdj);
+bool rvnd (Solucao&, double** matrizAdj);
 
 #endif

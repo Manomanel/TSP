@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <algorithm>//find e sort
+#include <algorithm>//reverse
 
 #include "Data.h"
 #include "construcao.h"
 #include "solucao.h"
 
-void swap (Solucao &s, double **matrizAdj)
+bool swap (Solucao &s, double **matrizAdj)
 {
     double bestDelta = 0; //melhor valor encontrado para o movimento
     int best_i, best_j; //posições usadas
@@ -44,7 +44,7 @@ void swap (Solucao &s, double **matrizAdj)
     }
 }
 
-void reinsertion (Solucao &s, double **matrizAdj, int choice)
+bool reinsertion (Solucao &s, double **matrizAdj, int choice)
 {
     double bestDelta = 0;
     int best_i, best_j;
@@ -89,10 +89,67 @@ void reinsertion (Solucao &s, double **matrizAdj, int choice)
     }
 }
 
-void two_opt (Solucao &s, double **matrizAdj, int choice)
+bool two_opt (Solucao &s, double **matrizAdj)
+{
+    double best_delta;
+    int best_i, best_j;
+
+    for (int i = 1; i < s.sequencia.size() - 1; i++){
+        int vi = s.sequencia[i]-1;
+        int vi_next = s.sequencia[i+1]-1;
+        for (int j = i+2; j < s.sequencia.size() - 1; j++){
+            //if(i==j || i == j-1 || i==j+1)continue;
+            int vj = s.sequencia[j]-1;
+            int vj_prev = s.sequencia[j-1]-1;
+
+            double delta = 0;
+            delta = - matrizAdj[vi][vi_next] - matrizAdj[vj_prev][vj] 
+                    + matrizAdj[vi][vj_prev] + matrizAdj[vi_next][vj];
+
+            if(delta < best_delta){
+                best_delta = delta;
+                best_i = i;
+                best_j = j;
+            }
+        }
+    }
+
+    if(best_delta < 0){
+        std::reverse(s.sequencia.begin()+best_i+1, s.sequencia.begin()+best_j);
+        s.valorObj = s.valorObj + best_delta;
+    }
+}
+
+void rvnd (Solucao &s, double **matrizAdj)
 {
 
-    //std::reverse
+    std::vector<int> NL = {1, 2, 3, 4, 5};
+    bool improved = false;
 
-
+    while (NL.empty() == false)
+    {
+        int n = rand() % NL.size();
+        switch (NL[n])
+        {
+        case 1:
+            improved = swap(s, matrizAdj);
+            break;
+        case 2:
+            improved = reinsertion(s, matrizAdj, 1);
+            break;
+        case 3:
+            improved = reinsertion(s, matrizAdj, 2);
+            break;
+        case 4:
+            improved = reinsertion(s, matrizAdj, 3);
+            break;
+        case 5:
+            improved = two_opt(s, matrizAdj);
+            break;
+        }
+        if (improved)
+        NL = {1, 2, 3, 4, 5};
+        else
+        NL.erase(NL.begin() + n);
+    }
 }
