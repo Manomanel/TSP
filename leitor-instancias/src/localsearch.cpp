@@ -12,11 +12,11 @@ bool swap (Solucao &s, double **matrizAdj)
     double bestDelta = 0; //melhor valor encontrado para o movimento
     int best_i, best_j; //posições usadas
 
-    for (int i = 1; i < s.sequencia.size() - 1; i++){
+    for (size_t i = 1; i < s.sequencia.size() - 1; i++){
         int vi = s.sequencia[i]-1;
         int vi_prev = s.sequencia[i-1]-1;
         int vi_next = s.sequencia[i+1]-1;
-        for (int j = i + 1; j < s.sequencia.size() - 1; j++){
+        for (size_t j = i + 1; j < s.sequencia.size() - 1; j++){
             int vj = s.sequencia[j]-1;
             int vj_prev = s.sequencia[j-1]-1;
             int vj_next = s.sequencia[j+1]-1;
@@ -41,7 +41,9 @@ bool swap (Solucao &s, double **matrizAdj)
     if(bestDelta < 0){
         std::swap(s.sequencia[best_i], s.sequencia[best_j]);
         s.valorObj = s.valorObj + bestDelta;
+        return true;
     }
+    return false;
 }
 
 bool reinsertion (Solucao &s, double **matrizAdj, int choice)
@@ -49,15 +51,15 @@ bool reinsertion (Solucao &s, double **matrizAdj, int choice)
     double bestDelta = 0;
     int best_i, best_j;
 
-    for (int i = 1; i < s.sequencia.size() - 1; i++){
-        if (choice >= 2 && i == s.sequencia.size() - 2 || choice == 3 && s.sequencia.size() - 3)continue;
+    for (size_t i = 1; i < s.sequencia.size() - 1; i++){
+        if ((choice >= 2 && i == s.sequencia.size() - 2) || (choice == 3 && s.sequencia.size() - 3))continue;
         int vi = s.sequencia[i]-1;
         int vi_prev = s.sequencia[i-1]-1;
         int vi_last = s.sequencia[i+choice-1]-1;
         int vi_next = s.sequencia[i+choice]-1;
 
-       for (int j = 1; j < s.sequencia.size() - 1; j++){
-            if (j == i-1 || j == i || j == i+1 && choice >= 2 || j == i+2 && choice == 3)continue;
+       for (size_t j = 1; j < s.sequencia.size() - 1; j++){
+            if (j == i-1 || j == i || (j == i+1 && choice >= 2) || (j == i+2 && choice == 3))continue;
 
             int vj = s.sequencia[j]-1;
             int vj_next = s.sequencia[j+1]-1;
@@ -86,19 +88,20 @@ bool reinsertion (Solucao &s, double **matrizAdj, int choice)
             }
         }
         s.valorObj = s.valorObj + bestDelta;
+        return true;
     }
+    return false;
 }
 
 bool two_opt (Solucao &s, double **matrizAdj)
 {
-    double best_delta;
+    double best_delta = 0;
     int best_i, best_j;
 
-    for (int i = 1; i < s.sequencia.size() - 1; i++){
+    for (size_t i = 1; i < s.sequencia.size() - 1; i++){
         int vi = s.sequencia[i]-1;
         int vi_next = s.sequencia[i+1]-1;
-        for (int j = i+2; j < s.sequencia.size() - 1; j++){
-            //if(i==j || i == j-1 || i==j+1)continue;
+        for (size_t j = i+2; j < s.sequencia.size() - 1; j++){
             int vj = s.sequencia[j]-1;
             int vj_prev = s.sequencia[j-1]-1;
 
@@ -117,7 +120,9 @@ bool two_opt (Solucao &s, double **matrizAdj)
     if(best_delta < 0){
         std::reverse(s.sequencia.begin()+best_i+1, s.sequencia.begin()+best_j);
         s.valorObj = s.valorObj + best_delta;
+        return true;
     }
+    return false;
 }
 
 void rvnd (Solucao &s, double **matrizAdj)
@@ -148,8 +153,8 @@ void rvnd (Solucao &s, double **matrizAdj)
             break;
         }
         if (improved)
-        NL = {1, 2, 3, 4, 5};
+            NL = {1, 2, 3, 4, 5};
         else
-        NL.erase(NL.begin() + n);
+            NL.erase(NL.begin() + n);
     }
 }

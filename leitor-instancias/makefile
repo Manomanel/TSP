@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -std=c++11 -Wall -DIL_STD -m64 -fPIC -O0
+CXXFLAGS := -std=c++11 -Wall -DIL_STD -m64 -fPIC -O3
 
 UNAME_S := $(shell uname -s)
 

@@ -1,15 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <limits>
 
 #include "Data.h"
 #include "construcao.h"
-#include "localsearch.h"
 #include "solucao.h"
 
-Solucao perturbacao (Solucao &s, double** matrizAdj)
+Solucao perturbacao (Solucao &best, double** matrizAdj)
 {
+    Solucao s = best;
     int pos_i, pos_j, tam_i, tam_j;
     int tam_max = ceil(s.sequencia.size() / 10);
 
@@ -65,32 +64,4 @@ Solucao perturbacao (Solucao &s, double** matrizAdj)
     calcularValorObj(s, matrizAdj);
 
     return s;
-}
-
-Solucao ILS(int maxIter, int maxIterIls, int dimensao, double** matrizAdj){
-    
-    Solucao bestOfAll;
-    bestOfAll.valorObj = std::numeric_limits<double>::max();
-
-    for (int i = 0; i < maxIter; i++){
-        Solucao s = criarSolucao(matrizAdj, dimensao);
-        Solucao best = s;
-
-        int iterIls = 0;
-
-        while (iterIls <= maxIterIls){
-            rvnd(s, matrizAdj);
-            if (s.valorObj < best.valorObj){
-                best = s;
-                iterIls = 0;
-            }
-            //s = perturbacao(best, matrizAdj);
-            iterIls++;
-        }
-        if (best.valorObj < bestOfAll.valorObj){
-            bestOfAll = best;
-        }
-    }
-    
-    return bestOfAll;
 }

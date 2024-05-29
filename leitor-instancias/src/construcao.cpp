@@ -59,7 +59,7 @@ void prepararSolucao (Solucao &s, std::vector<int> &candidatos, double **matrizA
 
 void criarInsercoes (Solucao &s, std::vector<int> &candidatos, double **matrizAdj, std::vector<insercao> &lista)
 {
-    for (int i = 0; i < s.sequencia.size()-1; i++)//cada vertice de S'
+    for (size_t i = 0; i < s.sequencia.size()-1; i++)//cada vertice de S'
     {
         for (size_t j = 0; j < candidatos.size(); j++)//para cada candidato
         {

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <limits>
 
 #include "Data.h"
 #include "solucao.h"
@@ -22,13 +23,32 @@ int main(int argc, char** argv) {
     if (dimensao >= 150){
         maxIterIls = dimensao/2;
     } else {maxIterIls = dimensao;}
+
+    //inicio do ILS
+    Solucao bestOfAll;
+    bestOfAll.valorObj = std::numeric_limits<double>::max();
+
+    for (int i = 0; i < maxIter; i++){
+        Solucao s = criarSolucao(matrizAdj, dimensao);
+        Solucao best = s;
+
+        int iterIls = 0;
+
+        while (iterIls <= maxIterIls){
+            rvnd(s, matrizAdj);
+            if (s.valorObj < best.valorObj){
+                best = s;
+                iterIls = 0;
+            }
+            s = perturbacao(best, matrizAdj);
+            iterIls++;
+        }
+        if (best.valorObj < bestOfAll.valorObj){
+            bestOfAll = best;
+        }
+    }
     
-    Solucao s;
-
-    s = ILS (maxIter, maxIterIls, dimensao, matrizAdj);
-
-    cout << "Valor depois do ILS: " << s.valorObj << endl;
-
+    cout << "Valor depois do ILS: " << bestOfAll.valorObj << endl;
 
     return 0;
 }
