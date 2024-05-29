@@ -6,6 +6,7 @@
 #include "solucao.h"
 #include "construcao.h"
 #include "localsearch.h"
+#include "perturbacao.h"
 
 using namespace std;
 
@@ -17,20 +18,17 @@ int main(int argc, char** argv) {
     data.read();
     int dimensao = data.getDimension();
     double **matrizAdj = data.getMatrixCost();
-
+    int maxIterIls, maxIter = 50;
+    if (dimensao >= 150){
+        maxIterIls = dimensao/2;
+    } else {maxIterIls = dimensao;}
+    
     Solucao s;
-    s = criarSolucao(matrizAdj, dimensao);
-    exibirSolucao(s);
-    calcularValorObj(s, matrizAdj);
-    cout << "Valor antes do rvnd: " << s.valorObj << endl;
 
-    rvnd(s, matrizAdj);
-    cout << "Valor depois do rvnd: " << s.valorObj << endl;
+    s = ILS (maxIter, maxIterIls, dimensao, matrizAdj);
 
-    exibirSolucao(s);
+    cout << "Valor depois do ILS: " << s.valorObj << endl;
 
-    calcularValorObj(s, matrizAdj);
-    cout << "Deveria dar: " << s.valorObj << endl; 
 
     return 0;
 }

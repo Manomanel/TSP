@@ -41,6 +41,7 @@ Solucao criarSolucao (double **matrizAdj, int dimensao)
         lista.clear();
         criarInsercoes(s, candidatos, matrizAdj, lista);
     }
+    calcularValorObj(s, matrizAdj);
     return s;
 }
 
