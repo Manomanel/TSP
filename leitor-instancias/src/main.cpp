@@ -40,7 +40,8 @@ int main(int argc, char** argv) {
                 best = s;
                 iterIls = 0;
             }
-            s = perturbacao(best, matrizAdj);
+            s = best;
+            perturbacao(s, matrizAdj);
             iterIls++;
         }
         if (best.valorObj < bestOfAll.valorObj){

@@ -3,7 +3,6 @@
 
 #include "solucao.h"
 
-Solucao perturbacao(Solucao&, double** matrizAdj);
-Solucao ILS(int maxIter, int maxIterIls, int dimensao, double** matrizAdj);
+void perturbacao (Solucao &s, double** matrizAdj);
 
 #endif

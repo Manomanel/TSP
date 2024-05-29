@@ -28,16 +28,16 @@ Solucao criarSolucao (double **matrizAdj, int dimensao)
 {
     Solucao s;
     std::vector<int> candidatos;
-    for (int i = 2; i <= dimensao; i++)//criar a lista de candidatos completa
-    {
+    //criar a lista de candidatos completa
+    for (int i = 2; i <= dimensao; i++){
         candidatos.push_back(i);
     }
-    prepararSolucao(s, candidatos, matrizAdj, dimensao);//criar uma solucao parcial com 3 elementos
-
-    std::vector<insercao> lista;//lista de possiveis insercoes
-    
-    while (!candidatos.empty())//criar e inserir um elemento ate acabar a lista de candidatos
-    {
+    //criar uma solucao parcial com 3 elementos
+    prepararSolucao(s, candidatos, matrizAdj, dimensao);
+    //lista de possiveis insercoes
+    std::vector<insercao> lista;
+    //criar e inserir um elemento ate acabar a lista de candidatos
+    while (!candidatos.empty()){
         lista.clear();
         criarInsercoes(s, candidatos, matrizAdj, lista);
     }
@@ -48,8 +48,7 @@ Solucao criarSolucao (double **matrizAdj, int dimensao)
 void prepararSolucao (Solucao &s, std::vector<int> &candidatos, double **matrizAdj, int dimensao)
 {
     s.sequencia.push_back(1);//inicia e termina com o elemento 1
-    for (int i = 0; i < 3; i++)//escolhe 3 candidatos aleatorios
-    {
+    for (int i = 0; i < 3; i++){//escolhe 3 candidatos aleatorios
         int rnd = rand() % candidatos.size();
         s.sequencia.push_back(candidatos[rnd]);
         candidatos.erase(candidatos.begin()+rnd);
@@ -59,10 +58,9 @@ void prepararSolucao (Solucao &s, std::vector<int> &candidatos, double **matrizA
 
 void criarInsercoes (Solucao &s, std::vector<int> &candidatos, double **matrizAdj, std::vector<insercao> &lista)
 {
-    for (size_t i = 0; i < s.sequencia.size()-1; i++)//cada vertice de S'
-    {
-        for (size_t j = 0; j < candidatos.size(); j++)//para cada candidato
-        {
+    for (size_t i = 0; i < s.sequencia.size()-1; i++){//cada vertice de S'
+        for (size_t j = 0; j < candidatos.size(); j++){//para cada candidato
+        
         insercao possivelInsercao;
         int elemento = candidatos[j];
         possivelInsercao.verticeSelecionado = elemento;
@@ -71,7 +69,6 @@ void criarInsercoes (Solucao &s, std::vector<int> &candidatos, double **matrizAd
         possivelInsercao.verticeRemovido = i+1;
         lista.push_back(possivelInsercao);
         }
-
     }
     ordenarLista(lista);
 
