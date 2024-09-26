@@ -9,7 +9,7 @@
 
 bool swap (Solucao &s, double **matrizAdj)
 {
-    double bestDelta = 0; //melhor valor encontrado para o movimento
+    double best_delta = 0; //melhor valor encontrado para o movimento
     int best_i, best_j; //posições usadas
 
     for (size_t i = 1; i < s.sequencia.size() - 1; i++){
@@ -30,17 +30,17 @@ bool swap (Solucao &s, double **matrizAdj)
                                + matrizAdj[vj_prev][vi] + matrizAdj[vi][vj_next];
             }
 
-            if (delta < bestDelta){
-                bestDelta = delta;
+            if (delta < best_delta){
+                best_delta = delta;
                 best_i = i;
                 best_j = j;
             }
         }
     }
     
-    if(bestDelta < 0){
+    if(best_delta < 0){
         std::swap(s.sequencia[best_i], s.sequencia[best_j]);
-        s.valorObj = s.valorObj + bestDelta;
+        s.valorObj += best_delta;
         return true;
     }
     return false;
@@ -48,7 +48,7 @@ bool swap (Solucao &s, double **matrizAdj)
 
 bool reinsertion (Solucao &s, double **matrizAdj, int choice)
 {
-    double bestDelta = 0;
+    double best_delta = 0;
     int best_i, best_j;
 
     for (size_t i = 1; i < s.sequencia.size() - 1; i++){
@@ -68,15 +68,15 @@ bool reinsertion (Solucao &s, double **matrizAdj, int choice)
             delta = - matrizAdj[vi_prev][vi] - matrizAdj[vi_last][vi_next] - matrizAdj[vj][vj_next]
                     + matrizAdj[vi_prev][vi_next] + matrizAdj[vj][vi] + matrizAdj[vi_last][vj_next];
 
-            if (delta < bestDelta){
-                bestDelta = delta;
+            if (delta < best_delta){
+                best_delta = delta;
                 best_i = i;
                 best_j = j;
             }
         }
     }
 
-    if(bestDelta < 0){
+    if(best_delta < 0){
         for (int n = 0; n < choice; n++){
             if (best_i < best_j){
                 s.sequencia.insert(s.sequencia.begin() + best_j+1, s.sequencia[best_i]);
@@ -87,7 +87,7 @@ bool reinsertion (Solucao &s, double **matrizAdj, int choice)
                 s.sequencia.insert(s.sequencia.begin() + best_j+1 + n, teste);
             }
         }
-        s.valorObj = s.valorObj + bestDelta;
+        s.valorObj += best_delta;
         return true;
     }
     return false;
@@ -119,7 +119,7 @@ bool two_opt (Solucao &s, double **matrizAdj)
 
     if(best_delta < 0){
         std::reverse(s.sequencia.begin()+best_i+1, s.sequencia.begin()+best_j);
-        s.valorObj = s.valorObj + best_delta;
+        s.valorObj += best_delta;
         return true;
     }
     return false;
