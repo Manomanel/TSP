@@ -10,10 +10,16 @@ void perturbacao (Solucao &s, double** matrizAdj)
 {
     
     int pos_i, pos_j, tam_i, tam_j;
-    int tam_max = ceil(s.sequencia.size() / 10);
+    int tam_max = ceil(s.sequencia.size() / 10.);
 
-    tam_i = rand() % (tam_max-2)+2;
-    tam_j = rand() % (tam_max-2)+2;
+    if (tam_max <= 2){
+        tam_i = 2;
+        tam_j = 2;
+    } else {
+        tam_i = rand() % (tam_max-2)+2;
+        tam_j = rand() % (tam_max-2)+2;
+    }
+    
     pos_i = rand() % (s.sequencia.size()-tam_i-1) + 1;
 
     do{
